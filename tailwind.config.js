@@ -14,6 +14,8 @@ export default {
  fontFamily: {
   hanalei: ['"Hanalei Fill"', 'cursive'],
   sans: ['Poppins', 'ui-sans-serif', 'system-ui'],
+  david: ['"David Libre"', 'serif'],
+  dancing: ['"Dancing Script"', 'cursive'],
 },
     },
   },
