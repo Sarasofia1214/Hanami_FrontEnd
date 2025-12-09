@@ -1,4 +1,5 @@
 import Logo from "../assets/logo.svg?react";
+import fondo from "../assets/fondo1.svg";
 
 
 export default function Login() {
@@ -35,8 +36,7 @@ export default function Login() {
 
               <button
                 type="submit"
-                className="w-full py-3 mt-4 rounded-full bg-hamani-dark text-white font-semibold hover:bg-black transition-colors"
-              >
+                className="w-1/2 px-14 py-3 mt-4 rounded-full bg-hamani-dark text-white font-semibold hover:bg-black transition-colors mx-auto block"              >
                 LOGIN
               </button>
             </form>
@@ -47,15 +47,16 @@ export default function Login() {
           </div>
         </div>
 
-
-        <div
-          className="hidden lg:block bg-cover bg-center"
-          style={{
-            backgroundImage: "",
-            minHeight: 640,
-          }}
-        />
+        <div className="hidden lg:block bg-cover bg-center"
+         style={{
+             backgroundImage: `linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0.75), rgba(255,255,255,0.15), rgba(255,255,255,0)), url(${fondo})`,
+        }}/>
+        
       </div>
     </div>
   );
 }
+
+
+
+
