@@ -16,6 +16,7 @@ export default {
   sans: ['Poppins', 'ui-sans-serif', 'system-ui'],
   david: ['"David Libre"', 'serif'],
   dancing: ['"Dancing Script"', 'cursive'],
+  alegreya: ['"Alegreya Sans"', 'sans-serif'],
 },
     },
   },
