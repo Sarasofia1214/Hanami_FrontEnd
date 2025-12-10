@@ -1,4 +1,5 @@
 import Logo from "../assets/logo.svg?react";
+import { Link } from "react-router-dom";
 import fondo from "../assets/comida.svg";
 import totoro from "../assets/totoro.svg";
 import icono_whatsapp from "../assets/whatsapp.svg";
@@ -16,14 +17,14 @@ export default function HamaniDashboard() {
         </div>
 
         <nav className="hidden md:flex text-3xl items-center space-x-20 text-lg font-medium mt-7 md:mt-0">
-          <a href="#">Inicio</a>
-          <a href="#">Nosotros</a>
-          <a href="#">Menú</a>
-          <a href="#">Contáctanos</a>
-        </nav>
+        <Link to="/">Inicio</Link>
+        <a href="#nosotros">Nosotros</a>
+        <Link to="/menu">Menú</Link>
+        <a href="#contacto">Contáctanos</a></nav>
+      
 
         <button className="hidden md:flex bg-red-800 text-white text-xl px-7 py-3 rounded-lg shadow hover:bg-red-900 transition mt-4 md:mt-0">
-          Reservar
+          <a href="#reservacion">Reservar</a>
         </button>
       </header>
 
@@ -55,8 +56,8 @@ export default function HamaniDashboard() {
         </div>
       </section>
 
-      {/* SOBRE HAMANI */}
-      <section className="w-full bg-[#F5F5F5] py-20 px-10 lg:px-20 flex flex-col lg:flex-row items-center gap-12">
+ 
+      <section  id="nosotros" className="w-full bg-[#F5F5F5] py-20 px-10 lg:px-20 flex flex-col lg:flex-row items-center gap-12">
         <div className="w-full lg:w-1/2 flex justify-center">
           <img
             src={totoro}
@@ -107,7 +108,7 @@ export default function HamaniDashboard() {
       </section>
 
 
-      <section className="w-full bg-white pt-20 pb-32">
+      <section id="reservacion" className="w-full bg-white pt-20 pb-32">
         <h1 className="text-center text-7xl font-david  font-bold text-[#131822]">
           Haz Tu Reservación
         </h1>
@@ -150,8 +151,8 @@ export default function HamaniDashboard() {
         </div>
 
 
-        <footer className="w-full bg-[#701515] text-white mt-24 pt-20 pb-16">
-             <div className="flex flex-warp items-center justify-center gap-60 text-lg">
+        <footer  id="contacto" className="w-full bg-[#701515] text-white mt-24 pt-20 pb-16">
+             <div className="flex flex-wrap items-center justify-center gap-60 text-lg">
         <div className="flex gap-14">
             <img src={icono_whatsapp} className="w-10" alt="whatsapp" />
             <img src={icono_instagram} className="w-10" alt="instagram" />
