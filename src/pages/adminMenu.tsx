@@ -123,7 +123,9 @@ export default function AdminMenuPage() {
                   <div
                     key={dish.id}
                     className="rounded-lg overflow-hidden bg-white shadow-lg cursor-pointer hover:scale-[1.02] transition"
+                    
                     onClick={() => setSelectedDish(dish)}
+
                   >
                     <img
                       src={dish.image_url}
