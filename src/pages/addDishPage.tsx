@@ -38,22 +38,29 @@ export default function AddDishPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const data = {
-      name: form.name,
-      description: form.description,
-      image_url: form.image_url,
-      category_id: Number(form.category_id),
-      is_available: true,
-      price: Number(form.price),
-    };
+   const data = {
+  name: form.name,
+  description: form.description,
+  image_url: form.image_url,
+  category_id: Number(form.category_id),
+  is_available: true, // mejor boolean
+  price: Number(form.price),
+};
 
-    await fetch(`${API}/dishes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+const res = await fetch(`${API}/dishes`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(data),
+});
+const body = await res.json().catch(() => null);
 
-    alert("Plato añadido correctamente");
+if (!res.ok) {
+  alert(body?.message || "Error al crear el plato");
+  return;
+}
+
+alert("Plato añadido correctamente");
+
   }
 
   return (

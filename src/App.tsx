@@ -6,6 +6,7 @@ import MenuPage from "./pages/menu";
 import AdminDashboard from "./pages/adminMain";
 import AdminMenuPage from "./pages/adminMenu";
 import AddDishPage from "./pages/addDishPage";
+import EditDishPage from "./pages/editDishes";
 
 export default function App() {
   return (
@@ -18,7 +19,7 @@ export default function App() {
         <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/adminMenu" element={<AdminMenuPage />} />
         <Route path="/admin/add-dish" element={<AddDishPage />} />
-        
+        <Route path="/admin/edit-dish/:id" element={<EditDishPage />} />
 
       </Routes>
     </BrowserRouter>

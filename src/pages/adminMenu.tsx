@@ -118,7 +118,7 @@ export default function AdminMenuPage() {
                 {cat.name.toUpperCase()}
               </h2>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 ">
                 {dishesOfCategory.map((dish) => (
                   <div
                     key={dish.id}
@@ -128,9 +128,9 @@ export default function AdminMenuPage() {
                     <img
                       src={dish.image_url}
                       alt={dish.name}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-48 object-cover "
                     />
-                    <div className="bg-black text-white p-5">
+                    <div className="bg-black text-white p-5  ">
                       <h3 className="text-xl font-semibold mb-1">{dish.name}</h3>
                       <p className="text-sm opacity-90">{dish.description}</p>
                     </div>
