@@ -58,6 +58,34 @@ export default function AdminMenuPage() {
     loadIngredients();
   }, [selectedDish]);
 
+  const handleDeleteDish = async (id: number) => {
+    const confirmDelete = window.confirm(
+      "¿Seguro que quieres eliminar este plato?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`${API}/dishes/${id}`, {
+        method: "DELETE",
+      });
+
+      const body = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        alert(body?.message || "Error al eliminar el plato");
+        return;
+      }
+
+      // Quitar el plato del estado y cerrar modal
+      setDishes((prev) => prev.filter((dish) => dish.id !== id));
+      setSelectedDish(null);
+      setIngredients([]);
+      alert("Plato eliminado correctamente");
+    } catch (err) {
+      alert("Error al eliminar el plato");
+    }
+  };
+
   const filteredDishes = dishes.filter((dish) => {
     const available = dish.is_available === 1 || dish.is_available === true;
     if (!available) return false;
@@ -71,12 +99,12 @@ export default function AdminMenuPage() {
 
   return (
     <main className="w-full relative">
-
       <header className="w-full bg-[#e7e7e7] py-4 flex items-center justify-between px-10 shadow gap-8 ">
-        
         <div className=" hidden md:flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
           <Logo className="w-20 h-20" />
-          <span className="text-xl md:text-7xl font-hanalei tracking-wide">HAMANI</span>
+          <span className="text-xl md:text-7xl font-hanalei tracking-wide">
+            HAMANI
+          </span>
         </div>
 
         <nav className="hidden md:flex text-3xl items-center space-x-20 text-lg font-medium mt-7 md:mt-0">
@@ -100,7 +128,6 @@ export default function AdminMenuPage() {
         >
           Añadir
         </Link>
-
       </header>
 
       <div className="mt-10">
@@ -113,7 +140,6 @@ export default function AdminMenuPage() {
 
           return (
             <section key={cat.id} className="px-8 md:px-16 my-16">
-              
               <h2 className="text-center text-6xl font-hanalei text-[#8b1e1e] mb-12 tracking-widest ">
                 {cat.name.toUpperCase()}
               </h2>
@@ -123,9 +149,7 @@ export default function AdminMenuPage() {
                   <div
                     key={dish.id}
                     className="rounded-lg overflow-hidden bg-white shadow-lg cursor-pointer hover:scale-[1.02] transition"
-                    
                     onClick={() => setSelectedDish(dish)}
-
                   >
                     <img
                       src={dish.image_url}
@@ -133,7 +157,9 @@ export default function AdminMenuPage() {
                       className="w-full h-48 object-cover "
                     />
                     <div className="bg-black text-white p-5  ">
-                      <h3 className="text-xl font-semibold mb-1">{dish.name}</h3>
+                      <h3 className="text-xl font-semibold mb-1">
+                        {dish.name}
+                      </h3>
                       <p className="text-sm opacity-90">{dish.description}</p>
                     </div>
                   </div>
@@ -146,9 +172,7 @@ export default function AdminMenuPage() {
 
       {selectedDish && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-
           <div className="bg-white rounded-2xl shadow-xl max-w-4xl w-full flex flex-col md:flex-row relative p-6 animate-fadeIn">
-
             <button
               className="absolute right-4 top-4 text-3xl text-gray-500 hover:text-black"
               onClick={() => {
@@ -175,10 +199,14 @@ export default function AdminMenuPage() {
               </p>
 
               <div className="bg-gray-200 rounded-xl p-4 mb-6 text-center">
-                <h3 className="text-red-700 font-semibold text-xl mb-2">Ingredientes:</h3>
+                <h3 className="text-red-700 font-semibold text-xl mb-2">
+                  Ingredientes:
+                </h3>
 
                 <p className="text-md">
-                  {ingredients.length > 0 ? ingredients.join(", ") : "No especificados"}
+                  {ingredients.length > 0
+                    ? ingredients.join(", ")
+                    : "No especificados"}
                 </p>
               </div>
 
@@ -187,7 +215,6 @@ export default function AdminMenuPage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
-
                 <Link
                   to={`/admin/edit-dish/${selectedDish.id}`}
                   className="bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-md hover:bg-red-700 transition text-center"
@@ -197,11 +224,10 @@ export default function AdminMenuPage() {
 
                 <button
                   className="bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-md hover:bg-red-700 transition"
-                  onClick={() => console.log("Eliminar", selectedDish.id)}
+                  onClick={() => handleDeleteDish(selectedDish.id)}
                 >
                   Eliminar
                 </button>
-
               </div>
             </div>
           </div>
