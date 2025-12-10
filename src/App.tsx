@@ -5,6 +5,7 @@ import HamaniDashboard from "./pages/main";
 import MenuPage from "./pages/menu";
 import AdminDashboard from "./pages/adminMain";
 import AdminMenuPage from "./pages/adminMenu";
+import AddDishPage from "./pages/addDishPage";
 
 export default function App() {
   return (
@@ -16,6 +17,9 @@ export default function App() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/adminMenu" element={<AdminMenuPage />} />
+        <Route path="/admin/add-dish" element={<AddDishPage />} />
+        
+
       </Routes>
     </BrowserRouter>
   );

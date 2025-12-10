@@ -17,9 +17,9 @@ export default function adminDashboard() {
         </div>
 
         <nav className="hidden md:flex text-3xl items-center space-x-20 text-lg font-medium mt-7 md:mt-0">
-        <Link to="/">Inicio</Link>
+        <a href="#inicio">Inicio</a>
         <a href="#nosotros">Nosotros</a>
-        <Link to="/menu">Menú</Link>
+        <Link to="/adminMenu">Menú</Link>
         <a href="#contacto">Contáctanos</a></nav>
       
 
@@ -29,7 +29,7 @@ export default function adminDashboard() {
       </header>
 
       <section className="pt-40 pb-20 px-6 md:px-16 grid grid-cols-1 lg:grid-cols-2 items-center gap-10">
-        <div className="text-center lg:text-left max-w-xl mx-auto lg:mx-0">
+        <div id="inicio" className="text-center lg:text-left max-w-xl mx-auto lg:mx-0">
           <h1 className="text-center text-4xl md:text-8xl font-david font-bold lg:text-left">
             El Arte de la
           </h1>

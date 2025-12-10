@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../assets/logo.svg?react";
+import { Link } from "react-router-dom";
 
 const API = "http://localhost:3000";
 
@@ -26,8 +27,6 @@ export default function AdminMenuPage() {
   const [selectedDish, setSelectedDish] = useState<Dish | null>(null);
   const [ingredients, setIngredients] = useState<string[]>([]);
 
-
-  // CARGAR CATEGORÍAS + PLATOS
   useEffect(() => {
     async function load() {
       const resCat = await fetch(`${API}/categories`);
@@ -40,9 +39,6 @@ export default function AdminMenuPage() {
     }
     load();
   }, []);
-
- 
-  // CARGAR INGREDIENTES DE UN PLATO
 
   useEffect(() => {
     if (!selectedDish) return;
@@ -62,9 +58,6 @@ export default function AdminMenuPage() {
     loadIngredients();
   }, [selectedDish]);
 
-  
-  // FILTRAR POR BUSQUEDA 
-
   const filteredDishes = dishes.filter((dish) => {
     const available = dish.is_available === 1 || dish.is_available === true;
     if (!available) return false;
@@ -79,18 +72,18 @@ export default function AdminMenuPage() {
   return (
     <main className="w-full relative">
 
-      <header className="w-full bg-[#e7e7e7] py-4 flex items-center justify-between px-10 shadow">
+      <header className="w-full bg-[#e7e7e7] py-4 flex items-center justify-between px-10 shadow gap-8 ">
         
-        <div className="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
+        <div className=" hidden md:flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
           <Logo className="w-20 h-20" />
           <span className="text-xl md:text-7xl font-hanalei tracking-wide">HAMANI</span>
         </div>
 
         <nav className="hidden md:flex text-3xl items-center space-x-20 text-lg font-medium mt-7 md:mt-0">
-          <a href="#">Inicio</a>
+          <Link to="/">Inicio</Link>
         </nav>
 
-        <div className="flex items-center bg-white border border-[#8b1e1e]/40 rounded-full px-4 py-2 w-[350px]">
+        <div className="flex gap-4 items-center bg-white border border-[#8b1e1e]/40 rounded-full px-4 py-2 w-[350px]">
           <span className="text-[#8b1e1e] text-xl mr-2">🔍</span>
           <input
             type="text"
@@ -101,12 +94,15 @@ export default function AdminMenuPage() {
           />
         </div>
 
-        <button className="hidden md:flex bg-red-800 text-white text-xl px-7 py-3 rounded-lg shadow hover:bg-red-900 transition mt-4 md:mt-0">
-         hola
-        </button>
+        <Link
+          to="/admin/add-dish"
+          className="flex bg-red-800 text-white text-1xl px-7 py-3 rounded-lg shadow hover:bg-red-900 transition mt-4 md:mt-0 sm:px-2 p-2 text-center"
+        >
+          Añadir
+        </Link>
+
       </header>
 
-      {/* MENU  */}
       <div className="mt-10">
         {categories.map((cat) => {
           const dishesOfCategory = filteredDishes.filter(
@@ -118,11 +114,10 @@ export default function AdminMenuPage() {
           return (
             <section key={cat.id} className="px-8 md:px-16 my-16">
               
-              <h2 className="text-center text-6xl font-hanalei text-[#8b1e1e] mb-12 tracking-widest">
+              <h2 className="text-center text-6xl font-hanalei text-[#8b1e1e] mb-12 tracking-widest ">
                 {cat.name.toUpperCase()}
               </h2>
 
-              {/* GRID */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                 {dishesOfCategory.map((dish) => (
                   <div
@@ -147,7 +142,6 @@ export default function AdminMenuPage() {
         })}
       </div>
 
-      {/* MODAL */}
       {selectedDish && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
 
@@ -166,13 +160,15 @@ export default function AdminMenuPage() {
             <img
               src={selectedDish.image_url}
               alt={selectedDish.name}
-              className="w-full md:w-1/2 h-[420px] object-cover rounded-xl"
+              className="w-full md:w-1/2 h-[420px] object-cover rounded-xl sm:h-[300px]"
             />
 
-            <div className="w-full md:w-1/2 px-6 flex flex-col justify-center">
-              <h2 className="text-4xl font-semibold mb-3">{selectedDish.name}</h2>
+            <div className="w-full md:w-1/2 px-6 flex flex-col justify-center ">
+              <h2 className="text-4xl font-semibold mb-3 text-center md:text-left   md:text-center">
+                {selectedDish.name}
+              </h2>
 
-              <p className="text-lg text-center md:text-left mb-6">
+              <p className="text-lg text-center md:text-left mb-6  md:text-center ">
                 {selectedDish.description}
               </p>
 
@@ -180,15 +176,31 @@ export default function AdminMenuPage() {
                 <h3 className="text-red-700 font-semibold text-xl mb-2">Ingredientes:</h3>
 
                 <p className="text-md">
-                  {ingredients.length > 0
-                    ? ingredients.join(", ")
-                    : "No especificados"}
+                  {ingredients.length > 0 ? ingredients.join(", ") : "No especificados"}
                 </p>
               </div>
 
-              <p className="text-4xl font-bold text-center">
+              <p className="text-4xl font-bold text-center mb-6">
                 ${selectedDish.price || "0.00"}
               </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
+
+                <Link
+                  to={`/admin/edit-dish/${selectedDish.id}`}
+                  className="bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-md hover:bg-red-700 transition text-center"
+                >
+                  Editar
+                </Link>
+
+                <button
+                  className="bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-md hover:bg-red-700 transition"
+                  onClick={() => console.log("Eliminar", selectedDish.id)}
+                >
+                  Eliminar
+                </button>
+
+              </div>
             </div>
           </div>
         </div>

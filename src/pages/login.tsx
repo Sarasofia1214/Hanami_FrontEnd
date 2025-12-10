@@ -87,7 +87,7 @@ export default function Login() {
                 LOGIN
               </button>
 
-              {error && <p className="text-red-500 text-center mt-2">{error}</p>}
+              {error && <p className="text-white text-center mt-2">{error}</p>}
             </form>
 
             <p className="text-center text-white mt-4 text-sm opacity-90">

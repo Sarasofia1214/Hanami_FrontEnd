@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../assets/logo.svg?react";
+import { Link } from "react-router-dom";
 
 const API = "http://localhost:3000";
 
@@ -42,9 +43,8 @@ export default function MenuPage() {
     load();
   }, []);
 
-  // =======================
   // CARGAR INGREDIENTES DE UN PLATO
-  // =======================
+
   useEffect(() => {
     if (!selectedDish) return;
 
@@ -86,7 +86,7 @@ export default function MenuPage() {
         </div>
 
         <nav className="hidden md:flex text-3xl items-center space-x-20 text-lg font-medium mt-7 md:mt-0">
-          <a href="#">Inicio</a>
+           <Link to="/">Inicio</Link>
         </nav>
 
         <div className="flex items-center bg-white border border-[#8b1e1e]/40 rounded-full px-4 py-2 w-[350px]">
@@ -150,7 +150,6 @@ export default function MenuPage() {
 
           <div className="bg-white rounded-2xl shadow-xl max-w-4xl w-full flex flex-col md:flex-row relative p-6 animate-fadeIn">
 
-            {/* Botón cerrar */}
             <button
               className="absolute right-4 top-4 text-3xl text-gray-500 hover:text-black"
               onClick={() => {
@@ -167,10 +166,10 @@ export default function MenuPage() {
               className="w-full md:w-1/2 h-[420px] object-cover rounded-xl"
             />
 
-            <div className="w-full md:w-1/2 px-6 flex flex-col justify-center">
+            <div className="w-full  text-center md:w-1/2 px-6 flex flex-col justify-center">
               <h2 className="text-4xl font-semibold mb-3">{selectedDish.name}</h2>
 
-              <p className="text-lg text-center md:text-left mb-6">
+              <p className="text-center text-lg md:text-left mb-6">
                 {selectedDish.description}
               </p>
 
