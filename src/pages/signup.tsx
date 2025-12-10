@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Logo from "../assets/logo.svg?react";
-import fondo from "../assets/fondo1.svg";
+import fondo from "../assets/fondo2.svg";
 
 export default function Signup() {
   const navigate = useNavigate();

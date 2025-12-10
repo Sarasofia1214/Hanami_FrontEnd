@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import Logo from "../assets/logo.svg?react";
 import fondo from "../assets/fondo1.svg";
 
@@ -26,8 +27,20 @@ export default function Login() {
         setError(data.message || "Error en login");
         return;
       }
+
+      // Guardamos token
       localStorage.setItem("token", data.token);
-      navigate("/dashboard");
+
+      // Decodificar token → obtener rol
+      const decoded: any = jwtDecode(data.token);
+      console.log("Token decodificado:", decoded);
+
+      // Redirección según el rol
+      if (decoded.role === "admin") {
+        navigate("/adminDashboard"); // panel admin
+      } else {
+        navigate("/dashboard"); // panel normal
+      }
 
     } catch (err) {
       console.error(err);
@@ -82,6 +95,7 @@ export default function Login() {
             </p>
           </div>
         </div>
+
         <div
           className="hidden lg:block bg-cover bg-center h-full w-full"
           style={{

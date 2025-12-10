@@ -3,7 +3,6 @@ import Logo from "../assets/logo.svg?react";
 
 const API = "http://localhost:3000";
 
-/* Tipos */
 type Category = {
   id: number;
   name: string;
@@ -20,7 +19,7 @@ type Dish = {
   price?: number;
 };
 
-export default function MenuPage() {
+export default function AdminMenuPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [search, setSearch] = useState("");
@@ -42,9 +41,9 @@ export default function MenuPage() {
     load();
   }, []);
 
-  // =======================
+ 
   // CARGAR INGREDIENTES DE UN PLATO
-  // =======================
+
   useEffect(() => {
     if (!selectedDish) return;
 
@@ -63,6 +62,8 @@ export default function MenuPage() {
     loadIngredients();
   }, [selectedDish]);
 
+  
+  // FILTRAR POR BUSQUEDA 
 
   const filteredDishes = dishes.filter((dish) => {
     const available = dish.is_available === 1 || dish.is_available === true;
@@ -101,10 +102,11 @@ export default function MenuPage() {
         </div>
 
         <button className="hidden md:flex bg-red-800 text-white text-xl px-7 py-3 rounded-lg shadow hover:bg-red-900 transition mt-4 md:mt-0">
-          Reservar
+         hola
         </button>
       </header>
 
+      {/* MENU  */}
       <div className="mt-10">
         {categories.map((cat) => {
           const dishesOfCategory = filteredDishes.filter(
@@ -145,12 +147,12 @@ export default function MenuPage() {
         })}
       </div>
 
+      {/* MODAL */}
       {selectedDish && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
 
           <div className="bg-white rounded-2xl shadow-xl max-w-4xl w-full flex flex-col md:flex-row relative p-6 animate-fadeIn">
 
-            {/* Botón cerrar */}
             <button
               className="absolute right-4 top-4 text-3xl text-gray-500 hover:text-black"
               onClick={() => {

@@ -6,7 +6,7 @@ import icono_whatsapp from "../assets/whatsapp.svg";
 import icono_instagram from "../assets/instagram.svg";
 import icono_facebook from "../assets/facebook.svg";
 
-export default function HamaniDashboard() {
+export default function adminDashboard() {
   return (
     <div className="w-full min-h-screen bg-white font-sans">
 
