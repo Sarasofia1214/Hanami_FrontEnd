@@ -13,7 +13,7 @@ export default function adminDashboard() {
       <header className="w-full flex flex-wrap items-center justify-between px-5 md:px-10 py-4 shadow-sm bg-white fixed top-0 left-0 z-50">
         <div className="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
           <Logo className="w-20 h-20" />
-          <span className="text-xl md:text-7xl font-hanalei tracking-wide"> <Link to="/">HAMANI</Link></span>
+          <span className="text-xl md:text-7xl font-hanalei tracking-wide"> <Link to="/adminMenu">HAMANI</Link></span>
         </div>
 
         <nav className="hidden md:flex text-3xl items-center space-x-20 text-lg font-medium mt-7 md:mt-0">

@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 import Logo from "../assets/logo.svg?react";
 import { Link } from "react-router-dom";
 import fondo from "../assets/comida.svg";
@@ -6,22 +8,132 @@ import icono_whatsapp from "../assets/whatsapp.svg";
 import icono_instagram from "../assets/instagram.svg";
 import icono_facebook from "../assets/facebook.svg";
 
+const API = "http://localhost:3000";
+
 export default function HamaniDashboard() {
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("19:00");
+  const [people, setPeople] = useState(2);
+  const [available, setAvailable] = useState<boolean | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [availableTables, setAvailableTables] = useState<any[]>([]);
+  const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
+
+
+
+// ...
+
+const getUserId = () => {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+  try {
+    const decoded: any = jwtDecode(token);
+    return decoded.id ?? decoded.userId ?? null; // adapta al campo real de tu JWT
+  } catch {
+    return null;
+  }
+};
+
+const userId = getUserId();
+  const buildDateTime = () => {
+    if (!date || !time) return null;
+    const dt = `${date}T${time}:00`;
+    console.log("front datetime", dt);
+    return dt;
+
+  };
+
+  // Comprobar disponibilidad cuando cambia fecha/hora/personas
+  useEffect(() => {
+    const datetime = buildDateTime();
+    if (!datetime || !people) {
+      setAvailable(null);
+      return;
+    }
+
+    const check = async () => {
+      try {
+        setChecking(true);
+        const res = await fetch(
+          `${API}/reservations/availability?datetime=${encodeURIComponent(
+            datetime
+          )}&people=${people}`
+        );
+        const tables = await res.json();
+if (Array.isArray(tables) && tables.length > 0) {
+  setAvailable(true);
+  setAvailableTables(tables);
+  setSelectedTableId(tables[0].id); // primera mesa disponible
+} else {
+  setAvailable(false);
+  setAvailableTables([]);
+  setSelectedTableId(null);
+}
+
+      } catch {
+        setAvailable(null);
+      } finally {
+        setChecking(false);
+      }
+    };
+
+    check();
+  }, [date, time, people]);
+
+  const handleReserve = async () => {
+    const datetime = buildDateTime();
+    if (!datetime || !people || !userId) return;
+
+    try {
+      setSending(true);
+      setMessage(null);
+
+      const res = await fetch(`${API}/reservations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+  user_id: userId,
+  table_id: selectedTableId,     // <- clave
+  reservation_time: datetime,
+  number_of_people: people,
+  status: "pending",
+}),
+
+      });
+
+      const body = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        setMessage(body?.error || "No se pudo crear la reservación.");
+        return;
+      }
+
+      setMessage("¡Tu reservación ha sido registrada!");
+    } catch {
+      setMessage("Error al crear la reservación.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <div className="w-full min-h-screen bg-white font-sans">
-
       <header className="w-full flex flex-wrap items-center justify-between px-5 md:px-10 py-4 shadow-sm bg-white fixed top-0 left-0 z-50">
         <div className="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
           <Logo className="w-20 h-20" />
-          <span className="text-xl md:text-7xl font-hanalei tracking-wide"><Link to="/">HAMANI</Link></span>
+          <span className="text-xl md:text-7xl font-hanalei tracking-wide">
+            <Link to="/">HAMANI</Link>
+          </span>
         </div>
 
         <nav className="hidden md:flex text-3xl items-center space-x-20 text-lg font-medium mt-7 md:mt-0">
-        <a href="#inicio">Inicio</a>
-        <a href="#nosotros">Nosotros</a>
-        <Link to="/menu">Menú</Link>
-        <a href="#contacto">Contáctanos</a></nav>
-      
+          <a href="#inicio">Inicio</a>
+          <a href="#nosotros">Nosotros</a>
+          <Link to="/menu">Menú</Link>
+          <a href="#contacto">Contáctanos</a>
+        </nav>
 
         <button className="hidden md:flex bg-red-800 text-white text-xl px-7 py-3 rounded-lg shadow hover:bg-red-900 transition mt-4 md:mt-0">
           <a href="#reservacion">Reservar</a>
@@ -29,7 +141,10 @@ export default function HamaniDashboard() {
       </header>
 
       <section className="pt-40 pb-20 px-6 md:px-16 grid grid-cols-1 lg:grid-cols-2 items-center gap-10">
-        <div id="inicio" className="text-center lg:text-left max-w-xl mx-auto lg:mx-0">
+        <div
+          id="inicio"
+          className="text-center lg:text-left max-w-xl mx-auto lg:mx-0"
+        >
           <h1 className="text-center text-4xl md:text-8xl font-david font-bold lg:text-left">
             El Arte de la
           </h1>
@@ -38,12 +153,18 @@ export default function HamaniDashboard() {
           </h2>
 
           <p className="mt-6 text-base md:text-lg text-gray-700 leading-relaxed text-center lg:text-left">
-            Ofrecemos una cocina donde la pasión, la pureza y la elegancia se encuentran en cada bocado, transportándole a un viaje de sabores inigualables. Bienvenido a descubrir nuestra mesa.
+            Ofrecemos una cocina donde la pasión, la pureza y la elegancia se
+            encuentran en cada bocado, transportándole a un viaje de sabores
+            inigualables. Bienvenido a descubrir nuestra mesa.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-20 mt-10">
-            <button className="bg-gray-900 text-white px-16 py-3 rounded-md"> <Link to="/menu">Menú</Link></button>
-            <button className="bg-orange-500 text-white px-16 py-3 rounded-md"><a href="#reservacion">Reservar</a></button>
+            <button className="bg-gray-900 text-white px-16 py-3 rounded-md">
+              <Link to="/menu">Menú</Link>
+            </button>
+            <button className="bg-orange-500 text-white px-16 py-3 rounded-md">
+              <a href="#reservacion">Reservar</a>
+            </button>
           </div>
         </div>
 
@@ -56,8 +177,10 @@ export default function HamaniDashboard() {
         </div>
       </section>
 
- 
-      <section  id="nosotros" className="w-full bg-[#F5F5F5] py-20 px-10 lg:px-20 flex flex-col lg:flex-row items-center gap-12">
+      <section
+        id="nosotros"
+        className="w-full bg-[#F5F5F5] py-20 px-10 lg:px-20 flex flex-col lg:flex-row items-center gap-12"
+      >
         <div className="w-full lg:w-1/2 flex justify-center">
           <img
             src={totoro}
@@ -77,37 +200,47 @@ export default function HamaniDashboard() {
 
           <div className="text-center space-y-8 text-gray-800">
             <div>
-              <p className="font-extrabold font-alegreya text-lg md:text-2xl">¿POR QUÉ CRUZAR EL UMBRAL DE HAMANI?</p>
+              <p className="font-extrabold font-alegreya text-lg md:text-2xl">
+                ¿POR QUÉ CRUZAR EL UMBRAL DE HAMANI?
+              </p>
               <p className="mt-1 text-base tracking-wide uppercase font-alegreya">
-                Para descubrir una experiencia donde la Maestría Culinaria asiática se eleva al arte moderno.
+                Para descubrir una experiencia donde la Maestría Culinaria
+                asiática se eleva al arte moderno.
               </p>
             </div>
 
             <div>
-              <p className="font-extrabold text-lg font-alegreya md:text-2xl">¿QUÉ HACE A NUESTRA MESA DIFERENTE?</p>
+              <p className="font-extrabold text-lg font-alegreya md:text-2xl">
+                ¿QUÉ HACE A NUESTRA MESA DIFERENTE?
+              </p>
               <p className="mt-1 text-base tracking-wide uppercase">
-                Nuestro compromiso es con la Armonía Estética y la Esencia Pura, garantizando que cada visita sea un viaje memorable.
+                Nuestro compromiso es con la Armonía Estética y la Esencia Pura,
+                garantizando que cada visita sea un viaje memorable.
               </p>
             </div>
 
             <p className="font-dancing text-red-700 mt-6 text-xl md:text-5xl">
-              Maestría Culinaria —  Armonía Estética — Esencia Pura
+              Maestría Culinaria — Armonía Estética — Esencia Pura
             </p>
           </div>
 
           <div className="mt-10 text-center">
             <p className="font-extrabold text-3xl tracking-wide">UBICACIÓN:</p>
-            <p className="mt-1 uppercase tracking-wide">Cra. 35A #49-55 — Zona cultural</p>
+            <p className="mt-1 uppercase tracking-wide">
+              Cra. 35A #49-55 — Zona cultural
+            </p>
           </div>
 
           <div className="mt-10 text-center">
             <p className="font-extrabold text-3xl tracking-wide">HORARIOS:</p>
-            <p className="mt-1 uppercase tracking-wide">Martes a Sábado, 19:00 - 23:00</p>
+            <p className="mt-1 uppercase tracking-wide">
+              Martes a Sábado, 19:00 - 23:00
+            </p>
           </div>
         </div>
       </section>
 
-
+      {/* RESERVAS */}
       <section id="reservacion" className="w-full bg-white pt-20 pb-32">
         <h1 className="text-center text-7xl font-david  font-bold text-[#131822]">
           Haz Tu Reservación
@@ -118,62 +251,95 @@ export default function HamaniDashboard() {
         </p>
 
         <div className="flex items-center justify-center gap-6 mt-12 px-4 flex-wrap">
-
+          {/* Fecha */}
           <div className="w-[360px] h-[70px] border border-black flex items-center px-6 justify-between">
             <input
               type="date"
-              placeholder="16/22/2021"
               className="outline-none text-lg w-full"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
             />
           </div>
 
+          {/* Hora */}
           <div className="w-[360px] h-[70px] border border-black flex items-center px-6 justify-between">
-            <select className="outline-none text-lg w-full bg-transparent">
-              <option>6:00 pm</option>
-              <option>7:00 pm</option>
-              <option>8:00 pm</option>
-            </select>   
+            <select
+              className="outline-none text-lg w-full bg-transparent"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+            >
+              <option value="19:00">7:00 pm</option>
+              <option value="20:00">8:00 pm</option>
+              <option value="21:00">9:00 pm</option>
+            </select>
           </div>
 
+          {/* Personas */}
           <div className="w-[360px] h-[70px] border border-black flex items-center px-6 justify-between">
-            <select className="outline-none text-lg w-full bg-transparent">
-              <option>2 Person</option>
-              <option>4 Person</option>
-              <option>6 Person</option>
+            <select
+              className="outline-none text-lg w-full bg-transparent"
+              value={people}
+              onChange={(e) => setPeople(Number(e.target.value))}
+            >
+              <option value={2}>2 Personas</option>
+              <option value={4}>4 Personas</option>
+              <option value={6}>6 Personas</option>
             </select>
           </div>
         </div>
 
+        {/* Disponibilidad */}
+        <div className="mt-6 text-center text-lg">
+          {checking && <span>Comprobando disponibilidad...</span>}
+          {!checking && available === true && (
+            <span className="text-green-600">
+              Hay mesas disponibles para este horario.
+            </span>
+          )}
+          {!checking && available === false && (
+            <span className="text-red-600">
+              No hay mesas disponibles para este horario.
+            </span>
+          )}
+        </div>
+
         <div className="flex justify-center mt-12">
-          <button className="bg-[#df8743] text-white text-2xl px-16 py-4 rounded-md hover:bg-[#c57234] transition">
-            Reservar Ahora
+          <button
+            className="bg-[#df8743] text-white text-2xl px-16 py-4 rounded-md hover:bg-[#c57234] transition disabled:opacity-60 disabled:cursor-not-allowed"
+            onClick={handleReserve}
+            disabled={ !date || !time || !people || available !== true || !selectedTableId || sending}
+
+          >
+            {sending ? "Reservando..." : "Reservar Ahora"}
           </button>
         </div>
 
+        {message && (
+          <p className="mt-6 text-center text-lg text-[#131822]">{message}</p>
+        )}
 
-        <footer  id="contacto" className="w-full bg-[#701515] text-white mt-24 pt-20 pb-16">
-             <div className="flex flex-wrap items-center justify-center gap-60 text-lg">
-        <div className="flex gap-14">
-            <img src={icono_whatsapp} className="w-10" alt="whatsapp" />
-            <img src={icono_instagram} className="w-10" alt="instagram" />
-            <img src={icono_facebook} className="w-10" alt="facebook" />
-        </div>
+        <footer
+          id="contacto"
+          className="w-full bg-[#701515] text-white mt-24 pt-20 pb-16"
+        >
+          <div className="flex flex-wrap items-center justify-center gap-60 text-lg">
+            <div className="flex gap-14">
+              <img src={icono_whatsapp} className="w-10" alt="whatsapp" />
+              <img src={icono_instagram} className="w-10" alt="instagram" />
+              <img src={icono_facebook} className="w-10" alt="facebook" />
+            </div>
 
-  
-    <p className="tracking-widest text-xl">
-      +57 3106326449
-    </p>
+            <p className="tracking-widest text-xl">+57 3106326449</p>
 
-    <p className="tracking-widest text-xl">
-      HUMARI@RESTAURANTE.COM
-    </p>
-  </div>
+            <p className="tracking-widest text-xl">
+              HUMARI@RESTAURANTE.COM
+            </p>
+          </div>
 
-  <div className="mt-16 border-t border-white/40 pt-8 text-center text-sm tracking-wide">
-    © 2020 Zero Inc. All rights Reserved
-  </div>
+          <div className="mt-16 border-t border-white/40 pt-8 text-center text-sm tracking-wide">
+            © 2020 Zero Inc. All rights Reserved
+          </div>
         </footer>
-
       </section>
     </div>
   );

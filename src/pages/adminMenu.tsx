@@ -20,6 +20,9 @@ type Dish = {
   price?: number;
 };
 
+
+
+
 export default function AdminMenuPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [dishes, setDishes] = useState<Dish[]>([]);

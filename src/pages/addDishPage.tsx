@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../assets/logo.svg?react";
-import DishIllustration from "../assets/fondo3.svg";
+import DishIllustration from "../assets/fondo2.svg";
 
 const API = "http://localhost:3000";
 
@@ -166,13 +166,16 @@ alert("Plato añadido correctamente");
           </form>
         </div>
 
-<div className="hidden md:flex w-1/2 justify-center items-center">
-  <img
-    src={DishIllustration}
-    alt="Ilustración"
-    className="w-[90%] h-auto"
-  />
-</div>
+
+  <div className="hidden md:flex w-1/2 justify-center items-center">
+    <div className="w-full max-w-xl aspect-[3/4]">
+      <img
+        src={DishIllustration}
+        alt="Ilustración"
+        className="w-full h-full object-contain"
+      />
+    </div>
+  </div>
 
       </section>
     </main>
