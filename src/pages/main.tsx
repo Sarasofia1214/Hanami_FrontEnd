@@ -11,6 +11,7 @@ import icono_facebook from "../assets/facebook.svg";
 const API = "http://localhost:3000";
 
 export default function HamaniDashboard() {
+// Estado del formulario de reserva
   const [date, setDate] = useState("");
   const [time, setTime] = useState("19:00");
   const [people, setPeople] = useState(2);
@@ -23,15 +24,16 @@ export default function HamaniDashboard() {
 
 
 
-// ...
+// Obtener id de usuario desde el token JWT guardado en localStorage
 
 const getUserId = () => {
   const token = localStorage.getItem("token");
   if (!token) return null;
   try {
     const decoded: any = jwtDecode(token);
-    return decoded.id ?? decoded.userId ?? null; // adapta al campo real de tu JWT
+    return decoded.id ?? decoded.userId ?? null; // devuelve el campo que contenga el id de usuario
   } catch {
+// si el token es inválido/corrupto, devuelve null
     return null;
   }
 };
@@ -53,10 +55,12 @@ const userId = getUserId();
       return;
     }
 
+    // comprobar disponibilidad cada vez que cambian fecha/hora/personas
     const check = async () => {
       try {
         setChecking(true);
         const res = await fetch(
+          // llamando al endpoint de disponibilidad del backend
           `${API}/reservations/availability?datetime=${encodeURIComponent(
             datetime
           )}&people=${people}`
@@ -118,6 +122,11 @@ if (Array.isArray(tables) && tables.length > 0) {
     }
   };
 
+  {available && availableTables.length > 0 && (
+  <p className="text-sm text-gray-600 mt-2">
+    Mesas disponibles: {availableTables.length}
+  </p>
+)}
   return (
     <div className="w-full min-h-screen bg-white font-sans">
       <header className="w-full flex flex-wrap items-center justify-between px-5 md:px-10 py-4 shadow-sm bg-white fixed top-0 left-0 z-50">
@@ -249,7 +258,7 @@ if (Array.isArray(tables) && tables.length > 0) {
         <p className="text-center mt-4 text-3xl font-dancing text-[#b33c2d]">
           Tu comida ideal la hacemos posible
         </p>
-
+{/* Controles de fecha, hora y personas */}
         <div className="flex items-center justify-center gap-6 mt-12 px-4 flex-wrap">
           {/* Fecha */}
           <div className="w-[360px] h-[70px] border border-black flex items-center px-6 justify-between">

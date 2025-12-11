@@ -10,7 +10,9 @@ import EditDishPage from "./pages/editDishes";
 
 export default function App() {
   return (
+  // habilita el enrutado basado en la URL del navegador
     <BrowserRouter>
+     {/* agrupa todas las rutas de la aplicación */}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

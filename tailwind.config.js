@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  // archivos donde tailwind buscará clases para generar solo el CSS 
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -8,9 +9,11 @@ export default {
     extend: {
       colors: {
         'hamani-red': '#C54537',   // color principal del card
-        'hamani-dark': '#2b1f1c',  // color botón oscuro
-        'hamani-bg': '#f2efed',    // fondo claro si lo usas
+        'hamani-dark': '#2b1f1c',  // color oscuro
+        'hamani-bg': '#f2efed',    // fondo claro
       },
+
+ // Familias tipográficas personalizadas usadas en el diseño
  fontFamily: {
   hanalei: ['"Hanalei Fill"', 'cursive'],
   sans: ['Poppins', 'ui-sans-serif', 'system-ui'],

@@ -28,6 +28,8 @@ export default function adminDashboard() {
         </button>
       </header>
 
+
+      {/* Sección hero con texto principal y botón hacia el menú público */}
       <section className="pt-40 pb-20 px-6 md:px-16 grid grid-cols-1 lg:grid-cols-2 items-center gap-10">
         <div id="inicio" className="text-center lg:text-left max-w-xl mx-auto lg:mx-0">
           <h1 className="text-center text-4xl md:text-8xl font-david font-bold lg:text-left">
@@ -150,7 +152,7 @@ export default function adminDashboard() {
           </button>
         </div>
 
-
+{/* Footer con datos de contacto e iconos sociales */}
         <footer  id="contacto" className="w-full bg-[#701515] text-white mt-24 pt-20 pb-16">
              <div className="flex flex-wrap items-center justify-center gap-60 text-lg">
         <div className="flex gap-14">

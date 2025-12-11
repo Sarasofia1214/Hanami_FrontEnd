@@ -25,6 +25,7 @@ type RouteParams = {
 };
 
 export default function EditDishPage() {
+// lee el :id de la ruta /admin/edit-dish/:id
   const { id } = useParams<RouteParams>();
   const navigate = useNavigate();
 
@@ -76,6 +77,7 @@ export default function EditDishPage() {
     if (id) load();
   }, [id]);
 
+// Manejar cambios de inputs/select/checkbox
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -87,6 +89,7 @@ export default function EditDishPage() {
     }));
   };
 
+   // Envío del formulario
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -120,6 +123,7 @@ export default function EditDishPage() {
     }
   }
 
+  // Pantalla de carga mientras se obtienen datos
   if (loading) {
     return (
       <main className="w-full min-h-screen bg-white flex items-center justify-center">

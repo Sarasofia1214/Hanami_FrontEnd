@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const API = "http://localhost:3000";
 
-/* Tipos */
+/* Tipos de datos */
 type Category = {
   id: number;
   name: string;
@@ -29,7 +29,7 @@ export default function MenuPage() {
   const [ingredients, setIngredients] = useState<string[]>([]);
 
 
-  // CARGAR CATEGORÍAS + PLATOS
+// Cargar categorías y platos al montar el componente
   useEffect(() => {
     async function load() {
       const resCat = await fetch(`${API}/categories`);
@@ -42,8 +42,7 @@ export default function MenuPage() {
     }
     load();
   }, []);
-
-  // CARGAR INGREDIENTES DE UN PLATO
+ // Cuando cambia el plato seleccionado carga sus ingredientes
 
   useEffect(() => {
     if (!selectedDish) return;
@@ -52,6 +51,7 @@ export default function MenuPage() {
       try {
         const res = await fetch(`${API}/ingredients/dish/${selectedDish.id}`);
         const json = await res.json();
+  // Extrae solo los nombres
         const names = json.map((i: any) => i.name);
         setIngredients(names);
       } catch (err) {
@@ -77,7 +77,7 @@ export default function MenuPage() {
 
   return (
     <main className="w-full relative">
-
+ {/* Header con logo, link a inicio y buscador */}
       <header className="w-full bg-[#e7e7e7] py-4 flex items-center justify-between px-10 shadow">
         
         <div className="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
@@ -106,6 +106,7 @@ export default function MenuPage() {
       </header>
 
       <div className="mt-10">
+    {/* Listado por categorías */}
         {categories.map((cat) => {
           const dishesOfCategory = filteredDishes.filter(
             (dish) => dish.category_id === cat.id
@@ -126,6 +127,7 @@ export default function MenuPage() {
                   <div
                     key={dish.id}
                     className="rounded-lg overflow-hidden bg-white shadow-lg cursor-pointer hover:scale-[1.02] transition"
+                    // Abre el modal con este plato
                     onClick={() => setSelectedDish(dish)}
                   >
                     <img
@@ -144,7 +146,7 @@ export default function MenuPage() {
           );
         })}
       </div>
-
+{/* Modal de detalle de plato */}
       {selectedDish && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
 

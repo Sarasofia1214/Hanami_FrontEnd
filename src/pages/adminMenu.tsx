@@ -30,6 +30,7 @@ export default function AdminMenuPage() {
   const [selectedDish, setSelectedDish] = useState<Dish | null>(null);
   const [ingredients, setIngredients] = useState<string[]>([]);
 
+// Cargar categorías y platos al montar el componente
   useEffect(() => {
     async function load() {
       const resCat = await fetch(`${API}/categories`);
@@ -42,7 +43,7 @@ export default function AdminMenuPage() {
     }
     load();
   }, []);
-
+// Cuando hay un plato seleccionado carga sus ingredientes
   useEffect(() => {
     if (!selectedDish) return;
 
@@ -60,7 +61,7 @@ export default function AdminMenuPage() {
 
     loadIngredients();
   }, [selectedDish]);
-
+  // Eliminar plato seleccionado
   const handleDeleteDish = async (id: number) => {
     const confirmDelete = window.confirm(
       "¿Seguro que quieres eliminar este plato?"
@@ -79,7 +80,7 @@ export default function AdminMenuPage() {
         return;
       }
 
-      // Quitar el plato del estado y cerrar modal
+    // Quita el plato del estado y cerrar modal
       setDishes((prev) => prev.filter((dish) => dish.id !== id));
       setSelectedDish(null);
       setIngredients([]);
@@ -89,6 +90,7 @@ export default function AdminMenuPage() {
     }
   };
 
+  // Filtrado de platos disponibles por texto de búsqueda
   const filteredDishes = dishes.filter((dish) => {
     const available = dish.is_available === 1 || dish.is_available === true;
     if (!available) return false;
@@ -102,6 +104,7 @@ export default function AdminMenuPage() {
 
   return (
     <main className="w-full relative">
+   {/* Header admin con buscador y botón Añadir */}
       <header className="w-full bg-[#e7e7e7] py-4 flex items-center justify-between px-10 shadow gap-8 ">
         <div className=" hidden md:flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
           <Logo className="w-20 h-20" />
@@ -179,6 +182,7 @@ export default function AdminMenuPage() {
             <button
               className="absolute right-4 top-4 text-3xl text-gray-500 hover:text-black"
               onClick={() => {
+            // Abre modal para ver/editar/eliminar
                 setSelectedDish(null);
                 setIngredients([]);
               }}

@@ -9,6 +9,7 @@ type Category = {
   name: string;
 };
 
+// Lista de categorías para el select
 export default function AddDishPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [form, setForm] = useState({
@@ -29,15 +30,17 @@ export default function AddDishPage() {
     load();
   }, []);
 
+  // Manejar cambios en inputs/select y actualizar el estado del formulario
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
+  // Envío del formulario
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+// Adaptar los tipos al formato que espera el backend
    const data = {
   name: form.name,
   description: form.description,
@@ -78,7 +81,7 @@ alert("Plato añadido correctamente");
         </nav>
       </header>
 
-     
+           {/* Layout principal*/}
       <section className="flex flex-col md:flex-row w-full px-10 py-16">
 
    

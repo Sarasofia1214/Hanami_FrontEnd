@@ -4,8 +4,10 @@ import Logo from "../assets/logo.svg?react";
 import fondo from "../assets/fondo2.svg";
 
 export default function Signup() {
+// hook de React Router para redirigir 
   const navigate = useNavigate();
 
+// Estado controlado de los campos del formulario.
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +29,7 @@ export default function Signup() {
         setError(data.message || "Error en signup");
         return;
       }
-
+// guarda el token para mantener la sesión iniciada
       localStorage.setItem("token", data.token);
       navigate("/dashboard");
 
@@ -87,7 +89,7 @@ export default function Signup() {
             </form>
 
             <p className="text-center text-white mt-4 text-sm opacity-90">
-              Or <Link to="/login" className="font-semibold underline">Login</Link>
+              Or <Link to="/" className="font-semibold underline">Login</Link>
             </p>
           </div>
         </div>
